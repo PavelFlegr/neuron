@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
         if(sum >= threshold) {
             puts("neuron fired");
         }
-
         
+        free(signal);
     }
 }
