@@ -2,10 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-const int SYNAPSE_COUNT = 5;
+#define SYNAPSE_COUNT 5
 
-int* get_initial_weights() {
-    int* weight = malloc(sizeof(int) * SYNAPSE_COUNT);
+int* get_initial_weights(int* weight) {
     for(int i = 0; i < SYNAPSE_COUNT; i++) {
         weight[i] = 1;
     }
@@ -27,8 +26,7 @@ int get_user_response() {
     }
 }
 
-int* get_signals_from_user() {
-    int* signal = malloc(sizeof(int) * SYNAPSE_COUNT);
+int* get_signals_from_user(int* signal) {
     for(int i = 0; i < SYNAPSE_COUNT; i++) {
         printf("fire synapse %i? (y/n)", i);
         signal[i] = get_user_response();
@@ -71,12 +69,16 @@ void print_synapses(int* weight) {
 }
 
 int main(int argc, char** argv) {
-    int* weight = get_initial_weights();
+    int weight[SYNAPSE_COUNT];
+    int signal[SYNAPSE_COUNT];
+    get_initial_weights(weight);
     while(1) {
-        int* signal = get_signals_from_user();
+        get_signals_from_user(signal);
         int sum = get_sum(signal, weight);
         int threshold = get_threshold(weight);
-        increase_weights(signal, weight);
+        if(sum >= threshold) {
+            increase_weights(signal, weight);
+        }
         print_synapses(weight);
 
         printf("threshold: %i\n", threshold);
@@ -84,7 +86,5 @@ int main(int argc, char** argv) {
         if(sum >= threshold) {
             puts("neuron fired");
         }
-        
-        free(signal);
     }
 }
